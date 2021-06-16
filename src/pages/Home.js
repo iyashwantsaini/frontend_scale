@@ -17,7 +17,7 @@ function Home() {
     })
       .then((res) => res.json())
       .then((result) => {
-        console.log(result);
+        console.log(result.data);
         setUsers(result.data);
         localStorage.setItem("users", JSON.stringify(result.data));
         console.log(result.data);
@@ -47,6 +47,32 @@ function Home() {
       .catch((error) => console.log(error));
   };
 
+  const sort_by_key = (array, key) => {
+    return array.sort(function (a, b) {
+      var x = a[key];
+      var y = b[key];
+      return x < y ? -1 : x > y ? 1 : 0;
+    });
+  };
+
+  useEffect(() => {
+    // fetchAllRecords();
+  }, [users]);
+
+  const sortFn = (typesort) => {
+    if (typesort === "interviewer") {
+      //sorting here
+      let newusers = sort_by_key(users, "email1");
+      setUsers(newusers);
+      console.log("users=>",users);
+    } else if (typesort === "interviewee") {
+      //sorting here
+      let newusers = sort_by_key(users, "email2");
+      console.log(newusers);
+      setUsers(newusers);
+    }
+  };
+
   return (
     <div className="home">
       <div>
@@ -55,8 +81,12 @@ function Home() {
           <thead>
             <tr>
               <th scope="col">#</th>
-              <th scope="col">Interviewer Email</th>
-              <th scope="col">Interviewee Email</th>
+              <th scope="col" onClick={() => sortFn("interviewer")}>
+                Interviewer Email
+              </th>
+              <th scope="col" onClick={() => sortFn("interviewee")}>
+                Interviewee Email
+              </th>
               <th scope="col">Start Time</th>
               <th>End Time</th>
               <th colSpan="2">Actions</th>
